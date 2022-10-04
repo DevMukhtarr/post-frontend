@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
+    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div class="header">
+        <a href="./views/login.html">Logout</a>
+    </div>
+    <div>
+    <section>
+        <div class="text">
+            <textarea placeholder="Post title" class="post_title"></textarea>
+            <textarea placeholder="Post Description" class="post_description"></textarea>
+            <input type="submit" value="post" class="new_post"/>
+        </div>
+    </section>
+    </div>
+    <div class="all-posts">
+    </div>
+</body>
+</html>
+<script>
+    const new_post = document.querySelector(".new_post")
+    const post_title = document.querySelector(".post_title")
+    const post_description = document.querySelector(".post_description");
+    new_post.onclick = async (event) =>{
+        const apiUrl = "https://micro-servisec.herokuapp.com/create-post"
+        const data = { post: post_title.value, description: post_description.value}
+        axios({
+        method: "POST",
+        url: `${apiUrl}`,
+        data: data,
+        headers: { 
+            "Content-Type": "application/json", 
+            "Access-Control-Allow-Origin" : "*",
+            "Access-Control-Allow-Methods":"GET,PUT,POST,",
+            "x-access-token": localStorage.getItem('x-access-token')
+    },
+    }).then(res=> {
+        location.reload();
+        console.log(res)
+    })
+    .catch(res => console.log(res))   
+    }
+
+    let all_posts = document.querySelector(".all-posts")
+    const apiUrl = "https://micro-servisec.herokuapp.com/posts"
+    axios({
+        method: "GET",
+        url: `${apiUrl}`,
+        headers: { 
+            "Content-Type": "application/json", 
+            "Access-Control-Allow-Origin" : "*",
+            "Access-Control-Allow-Methods":"GET,PUT,POST,",
+            "x-access-token": localStorage.getItem('x-access-token')
+    },
+    }).then((res)=>{
+        if(res.status == 200){
+          res.data.data.map((single_data) => {
+            let post = document.createElement('div')
+            let post_id = document.createElement('a')
+            let post_title = document.createElement('p')
+            let post_description = document.createElement('p')
+            let delete_post = document.createElement("button")
+            let comment = document.createElement("button")
+            let line = document.createElement("hr")
+
+            post_id.textContent = single_data._id
+            post_title.textContent = single_data.post
+            post_description.textContent = single_data.description
+            post.setAttribute('class', "post")
+            delete_post.setAttribute('post_id', single_data._id);
+            delete_post.setAttribute('class', "delete_post");
+            delete_post.textContent = "Delete"
+            comment.textContent = "Comment"
+            comment.setAttribute('post_id', single_data._id);
+            comment.setAttribute('class', "comment")
+
+            // post.appendChild(post_id)
+            post.appendChild(post_title)
+            post.appendChild(post_description)
+            post.appendChild(delete_post)
+            post.appendChild(comment)
+            post.appendChild(line)
+
+            all_posts.appendChild(post)
+          })
+        }
+    }).catch((res) =>{
+    //handle error
+    // const error = document.createElement('div').innerHTML = "An account with this email exists"
+    // page.appendChild(error)    
+    console.log(res);
+  });
+
+  window.onload = () => {
+        document.addEventListener('click', event =>{
+            if (event.target.className == 'delete_post') {
+                let post_id = event.target.getAttribute("post_id")
+                let data = { post_id }
+                axios({
+                    method: "POST",
+                    url: `https://micro-servisec.herokuapp.com/delete-post`,
+                    data: data,
+                    headers: { 
+                        "Content-Type": "application/json", 
+                        "Access-Control-Allow-Origin" : "*",
+                        "Access-Control-Allow-Methods":"GET,PUT,POST,",
+                        "x-access-token": localStorage.getItem('x-access-token')
+                        },
+            }).then(res =>{
+                location.reload();
+                console.log("post deleted")
+            }).catch(res =>{
+                console.log(res)
+            })
+            }
+            if (event.target.className == 'comment') {
+                localStorage.setItem( 'post_id', event.target.getAttribute("post_id"))
+                window.location.href = "./views/comment.html"
+            }
+        })
+    }
+    
+</script>

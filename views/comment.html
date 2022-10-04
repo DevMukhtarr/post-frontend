@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Comments</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div class="header">
+        <a href="../index.html">Home</a>
+    </div>
+    <div>
+    <section>
+        <div class="text">
+            <textarea placeholder="Comment" class="new_comment"></textarea>
+            <input type="submit" value="comment" class="create_comment"/>
+        </div>
+    </section>
+    </div>
+    <div class="all_posts">
+    </div>
+</body>
+</html>
+<script>
+    let create_comment = document.querySelector(".create_comment")
+    let new_comment = document.querySelector(".new_comment")
+    create_comment.onclick = async (event) =>{
+        event.preventDefault()
+        const apiUrl = `https://micro-servisec.herokuapp.com/comment`
+
+        let data = { post_id:localStorage.getItem('post_id'), comment:new_comment.value} 
+
+        await axios({
+        method: "POST",
+        data: data,
+        url: `${apiUrl}`,
+        headers: { 
+            "Content-Type": "application/json", 
+            "Access-Control-Allow-Origin" : "*",
+            "Access-Control-Allow-Methods":"GET,PUT,POST,",
+            "x-access-token": localStorage.getItem('x-access-token')
+    },
+    }).then(res =>{
+        location.reload();
+    }).catch(res =>{
+        console.log(res)
+    })
+    }
+
+    let all_posts = document.querySelector(".all_posts")
+    const apiUrl = `https://micro-servisec.herokuapp.com/single-post?post_id=${localStorage.getItem('post_id')}`
+    axios({
+        method: "GET",
+        url: `${apiUrl}`,
+        headers: { 
+            "Content-Type": "application/json", 
+            "Access-Control-Allow-Origin" : "*",
+            "Access-Control-Allow-Methods":"GET,PUT,POST,",
+            "x-access-token": localStorage.getItem('x-access-token')
+    },
+    }).then(res =>{
+        let post_body = document.createElement('div')
+        let post_title = document.createElement('p')
+        let post_description = document.createElement('p')
+        let comment_body = document.createElement('div')
+        post_title.textContent = res.data.data.post
+        post_description.textContent = res.data.data.description
+        
+        
+        post_body.appendChild(post_title)
+        post_body.appendChild(post_description)
+        let line = document.createElement("hr")
+        post_body.appendChild(line)
+
+        res.data.data.comment.map(single_comment=>{
+            let comment = document.createElement('p')
+            comment.textContent = single_comment
+            comment_body.appendChild(comment)
+            post_body.appendChild(comment_body)
+        })
+
+        all_posts.appendChild(post_body)
+        // console.log(res)
+    }).catch(res =>{
+        console.log(res)
+    })
+</script>
