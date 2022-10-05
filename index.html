@@ -98,8 +98,13 @@
 .container .info span .fa {
   color: #EF3B3A;
 }
-.error{
+.error-inputs{
   color: red;
+  display: none;
+}
+.error-incorrect{
+  color: red;
+  display: none;
 }
 body {
   background: #76b852; /* fallback for old browsers */
@@ -112,14 +117,13 @@ body {
 </style>
 <body>
   <div class="login-page">
-      <!-- <div class="flash">
-        All Inputs are needed
-      </div> -->
         <div class="form">
           <form class="login-form">
             <input type="text" class="email" placeholder="email" name="email"/>
             <input type="password" class="password" placeholder="password" name="password"/>
             <button class="login">login</button>
+             <p class="error-inputs"> All Inputs are required </p>
+             <p class="error-incorrect"> Email or password is incorrect </p>
             <p class="message">Not registered? <a href="./views/register.html">Create an account</a></p>
           </form>
         </div>
@@ -151,11 +155,13 @@ body {
             window.location.href = "./views/home.html" ; 
         }
     }).catch((res) =>{
-      let error = document.querySelector(".error")
-      console.log(res)
+      let errorinputs = document.querySelector(".error-inputs")
+      let errorincorrect = document.querySelector(".error-incorrect")
       if(res.response.status == 400){
-        let body = document.querySelector(".form")
-        // body.style.color = "red";
+        errorinputs.style.display = "block"
+      }
+      if(res.response.status == 424){
+        errorincorrect.style.display = "block"
       }
   });
   }
