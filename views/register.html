@@ -106,6 +106,14 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;      
 }
+.error-inputs{
+  color: red;
+  display: none;
+}
+.error-incorrect{
+  color: red;
+  display: none;
+}
 </style>
 <body>
     <div class="login-page">
@@ -115,6 +123,8 @@ body {
             <input type="text" class="name" placeholder="name" name="name"/>
             <input type="password" class="password" placeholder="password" name="password"/>
             <button class="register">Register</button>
+            <p class="error-inputs"> All Inputs are required </p>
+            <p class="error-incorrect"> An account with this email exists </p>
             <p class="message">Registered Already? <a href="../index.html">Login</p>
           </form>
         </div>
@@ -147,7 +157,14 @@ register.onclick = async (event) =>{
             window.location.href = "./home.html" ; 
         }
     }).catch((res) =>{  
-    console.log(res);
+      let errorinputs = document.querySelector(".error-inputs")
+      let errorincorrect = document.querySelector(".error-incorrect")
+      if(res.response.status == 400){
+        errorinputs.style.display = "block"
+      }
+      if(res.response.status == 424){
+        errorincorrect.style.display = "block"
+      }
   });
 }
 </script>
