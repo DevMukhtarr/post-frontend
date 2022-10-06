@@ -5,8 +5,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Homepage</title>
-    <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/axios@0.27.2/dist/axios.min.js"></script>
+    <!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
 </head>
 <body>
     <div class="header">
@@ -32,7 +32,7 @@
     new_post.onclick = async (event) =>{
         const apiUrl = "https://micro-servisec.herokuapp.com/create-post"
         const data = { post: post_title.value, description: post_description.value}
-        axios({
+        await axios({
         method: "POST",
         url: `${apiUrl}`,
         data: data,
@@ -51,7 +51,7 @@
 
     let all_posts = document.querySelector(".all-posts")
     const apiUrl = "https://micro-servisec.herokuapp.com/posts"
-    axios({
+     axios({
         method: "GET",
         url: `${apiUrl}`,
         headers: { 
@@ -93,10 +93,9 @@
           })
         }
     }).catch((res) =>{
-    //handle error
-    // const error = document.createElement('div').innerHTML = "An account with this email exists"
-    // page.appendChild(error)    
-    console.log(res);
+        if(res.response.status == 403){
+                    window.location.href = "../index.html"
+                }
   });
 
   window.onload = () => {

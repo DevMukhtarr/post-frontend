@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://unpkg.com/axios@0.27.2/dist/axios.min.js"></script>
 </head>
 <style>
     @import url(https://fonts.googleapis.com/css?family=Roboto:300);
@@ -148,7 +148,8 @@ body {
             "Access-Control-Allow-Origin" : "*",
             "Access-Control-Allow-Methods":"GET,PUT,POST,",
     },
-    }).then((res)=>{
+    })
+    .then((res)=>{
         if(res.status == 200){
           console.log(res)
             localStorage.setItem( 'x-access-token', res.data.token)
