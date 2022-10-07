@@ -7,13 +7,11 @@
     <title>Homepage</title>
     <script src="https://unpkg.com/axios@0.27.2/dist/axios.min.js"></script>
     <!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 </head>
 <style>
-    .header{
-        display: flex;
-        flex-direction: row;
-        justify-content: space-between;
-        padding: 1%;
+    body{
+        margin: 0;
     }
     a:link, a:visited {
         background-color: #a07572;
@@ -90,12 +88,61 @@
         border-radius: 5%;
         color: white;
     }
+    .topnav {
+    overflow: hidden;
+    background-color: #333;
+    position: relative;
+    }
+
+/* Hide the links inside the navigation menu (except for logo/home) */
+.topnav #myLinks {
+  display: none;
+}
+
+/* Style navigation menu links */
+.topnav a {
+  color: white;
+  padding: 14px 16px;
+  text-decoration: none;
+  font-size: 17px;
+  display: block;
+}
+
+/* Style the hamburger menu */
+.topnav a.icon {
+  background: black;
+  display: block;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+/* Add a grey background color on mouse-over */
+.topnav a:hover {
+  background-color: #ddd;
+  color: black;
+}
+
+/* Style the active link (or home/logo) */
+.active {
+  background-color: #04AA6D;
+  color: white;
+}
 </style>
 <body>
-    <div class="header">
-        <a href="../index.html">Logout</a>
-        <button class="email_list">Join Email List</button>
-    </div>
+    <div class="topnav">
+        <a class="email_list" style="font-family: sans-serif;">Join Mailing List</a>
+        <!-- Navigation links (hidden by default) -->
+        <div id="myLinks">
+          <a href="./allusers.html">All Users</a>
+          <a href="./mailinglist.html">Mailing List</a>
+          <a href="../index.html">Logout</a>
+        </div>
+        <!-- "Hamburger menu" / "Bar icon" to toggle the navigation links -->
+        <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+          <i class="fa fa-bars"></i>
+        </a>
+      </div>
     <div>
     <section>
         <div class="text">
@@ -113,7 +160,6 @@
     const new_post = document.querySelector(".new_post")
     const post_title = document.querySelector(".post_title")
     const post_description = document.querySelector(".post_description");
-    const email_list = document.querySelector(".email_list")
 
     new_post.onclick = async (event) =>{
         const apiUrl = "https://micro-servisec.herokuapp.com/create-post"
@@ -214,21 +260,5 @@
             }
         })
     }
-
-    email_list.onclick = () =>{
-                axios({
-                    method: "POST",
-                    url: `https://micro-servisec.herokuapp.com/join-email-list`,
-                    headers: { 
-                        "Content-Type": "application/json", 
-                        "Access-Control-Allow-Origin" : "*",
-                        "Access-Control-Allow-Methods":"GET,PUT,POST,",
-                        "x-access-token": localStorage.getItem('x-access-token')
-                        },
-            }).then(res =>{
-                alert("You have successfully joined our emailing list")
-            }).catch(res =>{
-                console.log("An error occurred")
-            })
-    }
 </script> 
+<script src="../scripts/scripts.js"></script>
