@@ -8,9 +8,93 @@
     <script src="https://unpkg.com/axios@0.27.2/dist/axios.min.js"></script>
     <!-- <script src="https://unpkg.com/axios/dist/axios.min.js"></script> -->
 </head>
+<style>
+    .header{
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding: 1%;
+    }
+    a:link, a:visited {
+        background-color: #a07572;
+        color: white;
+        padding: 14px 25px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        border-radius: 5%;
+    }
+
+    a:hover, a:active, .email_list:hover, .email_list:active, .comment:active, .comment:hover{
+    background-color: grey;
+    cursor: pointer;
+    }
+    .delete_post:hover{
+        background-color: red;
+        cursor: pointer;
+    }
+    .email_list{
+        background-color: #a07572;
+        color: white;
+        padding: 14px 25px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        border-radius: 5%;
+        border: none;
+    }
+    section{
+        margin: 5%;  
+        display: flex;      
+        align-items: center;
+        flex-direction: column;
+    }
+    .text{
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-content: center;
+        width: 30%;
+    }
+    .new_post{
+        display: flex;
+        justify-content: space-around;
+        margin-left: 30%;
+        margin-right: 30%;
+        padding: 2%;
+        margin-top: 2%;
+        background-color: #a07572;
+        color: white;
+        border: none;
+        border-radius: 5%;
+    }
+    .post-title{
+        font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    }
+    .post-description{
+        font-family: Verdana, Geneva, Tahoma, sans-serif;
+    }
+    .delete_post{
+        background-color: rgb(150, 32, 32);
+        border: none;
+        padding: 2%;
+        border-radius: 5%;
+        margin-right: 2%;
+        color: white;
+    }
+    .comment{
+        background-color: #a07572;
+        border: none;
+        padding: 2%;
+        border-radius: 5%;
+        color: white;
+    }
+</style>
 <body>
     <div class="header">
         <a href="../index.html">Logout</a>
+        <button class="email_list">Join Email List</button>
     </div>
     <div>
     <section>
@@ -19,9 +103,9 @@
             <textarea placeholder="Post Description" class="post_description"></textarea>
             <input type="submit" value="post" class="new_post"/>
         </div>
+        <div class="all-posts">
+        </div>
     </section>
-    </div>
-    <div class="all-posts">
     </div>
 </body>
 </html>
@@ -29,6 +113,8 @@
     const new_post = document.querySelector(".new_post")
     const post_title = document.querySelector(".post_title")
     const post_description = document.querySelector(".post_description");
+    const email_list = document.querySelector(".email_list")
+
     new_post.onclick = async (event) =>{
         const apiUrl = "https://micro-servisec.herokuapp.com/create-post"
         const data = { post: post_title.value, description: post_description.value}
@@ -75,6 +161,8 @@
             post_title.textContent = single_data.post
             post_description.textContent = single_data.description
             post.setAttribute('class', "post")
+            post_title.setAttribute('class', "post-title")
+            post_description.setAttribute('class', "post-description")
             delete_post.setAttribute('post_id', single_data._id);
             delete_post.setAttribute('class', "delete_post");
             delete_post.textContent = "Delete"
@@ -126,5 +214,21 @@
             }
         })
     }
-    
-</script>
+
+    email_list.onclick = () =>{
+                axios({
+                    method: "POST",
+                    url: `https://micro-servisec.herokuapp.com/join-email-list`,
+                    headers: { 
+                        "Content-Type": "application/json", 
+                        "Access-Control-Allow-Origin" : "*",
+                        "Access-Control-Allow-Methods":"GET,PUT,POST,",
+                        "x-access-token": localStorage.getItem('x-access-token')
+                        },
+            }).then(res =>{
+                alert("You have successfully joined our emailing list")
+            }).catch(res =>{
+                console.log("An error occurred")
+            })
+    }
+</script> 
